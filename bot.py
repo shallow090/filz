@@ -46,7 +46,7 @@ async def start_web_server():
     app.router.add_get('/health', health_check)
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', 80)
+    site = web.TCPSite(runner, '0.0.0.0', 8080)
     await site.start()
 
 async def main():
