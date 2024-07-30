@@ -9,6 +9,7 @@ RUN pip3 install -U pip && pip3 install -U -r requirements.txt
 RUN mkdir /Horizon
 WORKDIR /Horizon
 COPY . /Horizon
+EXPOSE 8080
 CMD ["python", "bot.py"]
 
-EXPOSE 8080
+
