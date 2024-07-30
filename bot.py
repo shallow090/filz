@@ -34,7 +34,7 @@ from plugins.clone import restart_bots
 
 ppath = "plugins/*.py"
 files = glob.glob(ppath)
-loop = asyncio.get_event_loop()
+loop = asyncio.get_running_loop()
 
 async def start():
     print('\n')
