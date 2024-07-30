@@ -10,3 +10,5 @@ RUN mkdir /Horizon
 WORKDIR /Horizon
 COPY . /Horizon
 CMD ["python", "bot.py"]
+
+EXPOSE 8080
