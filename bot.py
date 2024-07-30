@@ -34,7 +34,7 @@ from plugins.clone import restart_bots
 
 ppath = "plugins/*.py"
 files = glob.glob(ppath)
-loop = asyncio.run()
+loop = asyncio.get_event_loop()
 async def start():
     print('\n')
     print('Initalizing Horizon Bot')
