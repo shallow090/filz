@@ -1,24 +1,40 @@
-import asyncio
-import logging
+import sys
 import glob
 import importlib
-import sys
 from pathlib import Path
-from aiohttp import web
-from pyrogram import Client, idle
+from pyrogram import idle
+import logging
+import logging.config
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+# Get logging configurations
+logging.config.fileConfig('logging.conf')
+logging.getLogger().setLevel(logging.INFO)
 logging.getLogger("pyrogram").setLevel(logging.ERROR)
+logging.getLogger("imdbpy").setLevel(logging.ERROR)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logging.getLogger("aiohttp").setLevel(logging.ERROR)
+logging.getLogger("aiohttp.web").setLevel(logging.ERROR)
 
-from config import LOG_CHANNEL, CLONE_MODE
+from pyrogram import Client, __version__
+from pyrogram.raw.all import layer
+from config import LOG_CHANNEL, CLONE_MODE, PORT
+from typing import Union, Optional, AsyncGenerator
+from pyrogram import types
+from Script import script 
+from datetime import date, datetime 
+import pytz
+from aiohttp import web
+
+import asyncio
 from plugins.clone import restart_bots
 
 ppath = "plugins/*.py"
 files = glob.glob(ppath)
 
-async def start_bot():
+async def start():
     print('\n')
     print('Initalizing Horizon Bot')
     for name in files:
@@ -33,27 +49,18 @@ async def start_bot():
             sys.modules["plugins." + plugin_name] = load
             print("Bot Imported => " + plugin_name)
 
+    tz = pytz.timezone('Asia/Kolkata')
+    today = date.today()
+    now = datetime.now(tz)
+    time = now.strftime("%H:%M:%S %p")
+    bind_address = "0.0.0.0"
     if CLONE_MODE:
         await restart_bots()
     print("Bot Started Powered By @Horizon_Bots")
     await idle()
 
-async def health_check(request):
-    return web.Response(text="OK")
-
-async def start_web_server():
-    app = web.Application()
-    app.router.add_get('/health', health_check)
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', 8080)
-    await site.start()
-
-async def main():
-    await asyncio.gather(start_bot(), start_web_server())
-
 if __name__ == '__main__':
     try:
-        asyncio.run(main())
+        asyncio.run(start())
     except KeyboardInterrupt:
         logging.info('Service Stopped Bye 👋')
