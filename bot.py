@@ -29,10 +29,12 @@ import pytz
 from aiohttp import web
 
 import asyncio
+from pyrogram import idle
 from plugins.clone import restart_bots
 
 ppath = "plugins/*.py"
 files = glob.glob(ppath)
+loop = asyncio.get_running_loop()
 
 async def start():
     print('\n')
@@ -54,13 +56,13 @@ async def start():
     now = datetime.now(tz)
     time = now.strftime("%H:%M:%S %p")
     bind_address = "0.0.0.0"
-    if CLONE_MODE:
+    if CLONE_MODE == True:
         await restart_bots()
     print("Bot Started Powered By @Horizon_Bots")
     await idle()
 
 if __name__ == '__main__':
     try:
-        asyncio.run(start())
+        loop.run_until_complete(start())
     except KeyboardInterrupt:
-        logging.info('Service Stopped Bye 👋')
+        logging.info('Service Stopped Bye 👋
