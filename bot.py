@@ -5,6 +5,7 @@ from pathlib import Path
 from pyrogram import idle
 import logging
 import logging.config
+import asyncio
 
 # Get logging configurations
 logging.config.fileConfig('logging.conf')
@@ -27,14 +28,10 @@ from Script import script
 from datetime import date, datetime 
 import pytz
 from aiohttp import web
-
-import asyncio
-from pyrogram import idle
 from plugins.clone import restart_bots
 
 ppath = "plugins/*.py"
 files = glob.glob(ppath)
-loop = asyncio.get_running_loop()
 
 async def start():
     print('\n')
@@ -62,6 +59,7 @@ async def start():
     await idle()
 
 if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(start())
     except KeyboardInterrupt:
